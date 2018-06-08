@@ -162,8 +162,13 @@ window.RecurringSelectDialog =
         else
           @until_date.val(@current_rule.hash.until)
       else
-        @never_option = @outer_holder.find "input[name='rs_termination'][value='never']"
-        @never_option.prop('checked', true)
+        #Ross Remove the never ends option
+        #@never_option = @outer_holder.find "input[name='rs_termination'][value='never']"
+        #@never_option.prop('checked', true)
+        @count_option = @outer_holder.find "input[name='rs_termination'][value='count']"
+        @count_option.prop('checked', true)
+        @occurrence_count = @outer_holder.find '#rs_occurrence_count'
+        @occurrence_count.val(4)
 
       @all_termination_options = @outer_holder.find ".rs_termination_section input[type='radio'], #rs_occurrence_count, #rs_until_date"
       @all_termination_options.on "change", @terminationChanged
@@ -407,10 +412,13 @@ window.RecurringSelectDialog =
                     <label class='rs_termination_label'>#{$.fn.recurring_select.texts["ends"]}:</label>
                   </td>
                   <td>
+                    <!--
+                    #Ross Remove the never ends option
                     <label>
                       <input type='radio' name='rs_termination' value='never' />
-                      #{$.fn.recurring_select.texts["never"]}
+                      #{$.fn.recurring_select.texts["never"] if false}
                     </label><br>
+                    -->
                     <label>
                       <input type='radio' name='rs_termination' value='count' />
                       #{$.fn.recurring_select.texts["after"]}
