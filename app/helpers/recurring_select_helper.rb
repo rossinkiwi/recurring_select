@@ -25,6 +25,8 @@ module RecurringSelectHelper
 
   module FormOptionsHelper
     def recurring_options_for_select(currently_selected_rule = nil, default_schedules = nil, options = {})
+#byebug
+      currently_selected_rule = nil if currently_selected_rule == "null"
 
       options_array = []
       blank_option_label = options[:blank_label] || I18n.t("recurring_select.not_recurring")
@@ -63,6 +65,17 @@ module RecurringSelectHelper
     end
 
     private
+
+#    def recurring=(value)
+#byebug
+#      if value == "null"
+#        super(nil)
+#      elsif RecurringSelect.is_valid_rule?(value)
+#        super(RecurringSelect.dirty_hash_to_rule(value).to_hash)
+#      else
+#        super(nil)
+#      end
+#    end
 
     def ice_cube_rule_to_option(supplied_rule, custom = false)
       return supplied_rule unless RecurringSelect.is_valid_rule?(supplied_rule)
