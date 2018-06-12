@@ -1,4 +1,3 @@
-//= require jquery-ui/widgets/datepicker
 //= require recurring_select_dialog
 //= require_self
 
@@ -37,6 +36,7 @@ methods =
 
     @val new_json_val
     methods.set_initial_values.apply @
+    @.trigger "change" # Need this so that duplicatible divs gets trigger to fix selects so they are duplicatible
     @.trigger "recurring_select:save"
 
   current_rule: ->

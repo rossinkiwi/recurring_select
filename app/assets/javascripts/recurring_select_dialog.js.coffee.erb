@@ -11,9 +11,9 @@ window.RecurringSelectDialog =
     initDialogBox: ->
       $(".rs_dialog_holder").remove()
 
-      open_in = $("body")
-      open_in = $(".ui-page-active") if $(".ui-page-active").length
-      open_in.append @template()
+      @open_in = $("#global_modal") 
+      # open_in = $(".ui-page-active") if $(".ui-page-active").length
+      @open_in.append @template()
       @outer_holder = $(".rs_dialog_holder")
       @inner_holder = @outer_holder.find ".rs_dialog"
       @content = @outer_holder.find ".rs_dialog_content"
@@ -22,7 +22,11 @@ window.RecurringSelectDialog =
       @freqInit()
       @terminationInit()
       @summaryInit()
+      @open_in.modal("show")
       @outer_holder.trigger "recurring_select:dialog_opened"
+      
+      $("#rs_occurrence_count").trigger("change")
+
       @freq_select.focus()
 
     positionDialogVert: (initial_positioning) =>
@@ -52,6 +56,7 @@ window.RecurringSelectDialog =
 
     cancel: =>
       @outer_holder.remove()
+      @open_in.modal("hide")
       @recurring_selector.recurring_select('cancel')
 
     outerCancel: (event) =>
@@ -61,6 +66,7 @@ window.RecurringSelectDialog =
     save: =>
       return if !@current_rule.str?
       @outer_holder.remove()
+      @open_in.modal("hide")
       @recurring_selector.recurring_select('save', @current_rule)
 
 # ========================= Init Methods ===============================
@@ -144,7 +150,10 @@ window.RecurringSelectDialog =
 
     terminationInit: ->
       @until_date = @outer_holder.find '#rs_until_date'
-      @until_date.datepicker({ dateFormat: 'yy-mm-dd', minDate: 0 })
+      #@until_date.datepicker({ dateFormat: 'yy-mm-dd', minDate: 0 })
+      @until_date.datetimepicker({ sideBySide: true, showClose: true, calendarWeeks: true, format: "YYYY-MM-DD"})
+      @until_date.on "dp.change", @terminationChanged
+
       if @current_rule.hash? && @current_rule.hash.count?
         @count_option = @outer_holder.find "input[name='rs_termination'][value='count']"
         @count_option.prop('checked', true)
@@ -168,7 +177,7 @@ window.RecurringSelectDialog =
         @count_option = @outer_holder.find "input[name='rs_termination'][value='count']"
         @count_option.prop('checked', true)
         @occurrence_count = @outer_holder.find '#rs_occurrence_count'
-        @occurrence_count.val(4)
+        @occurrence_count.val("0")
 
       @all_termination_options = @outer_holder.find ".rs_termination_section input[type='radio'], #rs_occurrence_count, #rs_until_date"
       @all_termination_options.on "change", @terminationChanged
@@ -348,8 +357,8 @@ window.RecurringSelectDialog =
 
     template: () ->
       str = "
-      <div class='rs_dialog_holder'>
-        <div class='rs_dialog'>
+      <div class='rs_dialog_holder modal-dialog'>
+        <div class='rs_dialog modal-content'>
           <div class='rs_dialog_content'>
             <h1>#{$.fn.recurring_select.texts["repeat"]} <a href='#' title='#{$.fn.recurring_select.texts["cancel"]}' Alt='#{$.fn.recurring_select.texts["cancel"]}'></a> </h1>
             <p class='frequency-select-wrapper'>
@@ -428,7 +437,7 @@ window.RecurringSelectDialog =
                     <label>
                       <input type='radio' name='rs_termination' value='until' />
                       #{$.fn.recurring_select.texts["on"]}
-                      <input type='text' data-wrapper-class='ui-recurring-select' class='rs_datepicker' id='rs_until_date' />
+                      <input type='text' data-wrapper-class='ui-recurring-select' class='date_time_picker' id='rs_until_date' />
                     </label>
                   </td>
               </table>
