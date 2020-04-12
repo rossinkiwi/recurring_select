@@ -265,7 +265,6 @@ window.RecurringSelectDialog =
     freqChanged: =>
       @current_rule.hash = null unless $.isPlainObject(@current_rule.hash) # for custom values
 
-      @current_rule.str = null
       @current_rule.hash ||= {}
       @current_rule.hash.interval = 1
       @current_rule.hash.validations = null
@@ -274,15 +273,19 @@ window.RecurringSelectDialog =
       switch @freq_select.val()
         when "Weekly"
           @current_rule.hash.rule_type = "IceCube::WeeklyRule"
+          @current_rule.str = $.fn.recurring_select.texts["weekly"]
           @initWeeklyOptions()
         when "Monthly"
           @current_rule.hash.rule_type = "IceCube::MonthlyRule"
+          @current_rule.str = $.fn.recurring_select.texts["monthly"]
           @initMonthlyOptions()
         when "Yearly"
           @current_rule.hash.rule_type = "IceCube::YearlyRule"
+          @current_rule.str = $.fn.recurring_select.texts["yearly"]
           @initYearlyOptions()
         else
           @current_rule.hash.rule_type = "IceCube::DailyRule"
+          @current_rule.str = $.fn.recurring_select.texts["daily"]
           @initDailyOptions()
       @summaryUpdate()
       @positionDialogVert()
