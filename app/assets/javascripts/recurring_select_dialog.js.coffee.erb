@@ -148,11 +148,15 @@ window.RecurringSelectDialog =
       interval_input.on "change keyup", @intervalChanged
       section.show()
 
+    selectUntilRadio: ->
+      # When calendar end date is selected, select 'until' radio button
+      $(".rs_dialog_holder").find("input[name='rs_termination'][value='until']")[0].checked = true
+
     terminationInit: ->
       @until_date = @outer_holder.find '#rs_until_date'
-      #@until_date.datepicker({ dateFormat: 'yy-mm-dd', minDate: 0 })
-      @until_date.datetimepicker({ sideBySide: true, showClose: true, calendarWeeks: true, format: "YYYY-MM-DD"})
-      @until_date.on "dp.change", @terminationChanged
+      @until_date.datetimepicker({ inline: false, sideBySide: false, showClose: true, calendarWeeks: true, format: "YYYY-MM-DD"})
+      @until_date.on 'dp.change', @selectUntilRadio
+      @until_date.on 'dp.change', @terminationChanged
 
       if @current_rule.hash? && @current_rule.hash.count?
         @count_option = @outer_holder.find "input[name='rs_termination'][value='count']"
@@ -418,32 +422,40 @@ window.RecurringSelectDialog =
               </p>
             </div>
             <div class='rs_termination_section'>
-              <table>
-                <tr>
-                  <td>
-                    <label class='rs_termination_label'>#{$.fn.recurring_select.texts["ends"]}:</label>
-                  </td>
-                  <td>
-                    <!--
-                    #Ross Remove the never ends option
-                    <label>
-                      <input type='radio' name='rs_termination' value='never' />
-                      #{$.fn.recurring_select.texts["never"] if false}
-                    </label><br>
-                    -->
-                    <label>
-                      <input type='radio' name='rs_termination' value='count' />
-                      #{$.fn.recurring_select.texts["after"]}
-                      <input type='text' data-wrapper-class='ui-recurring-select' id='rs_occurrence_count' class='rs_count' value='10' size='2' />
-                      #{$.fn.recurring_select.texts["occurrences"]}
-                    </label><br>
-                    <label>
-                      <input type='radio' name='rs_termination' value='until' />
-                      #{$.fn.recurring_select.texts["on"]}
-                      <input type='text' data-wrapper-class='ui-recurring-select' class='date_time_picker' id='rs_until_date' />
-                    </label>
-                  </td>
-              </table>
+              <div class='divTable'>
+                <div class='divTableBody'>
+                  <div class='divTableRow'>
+                    <div class='divTableCell'>
+                      <label class='rs_termination_label'>#{$.fn.recurring_select.texts['ends']}:</label>
+                    </div>
+                    <div class='divTableCell'>
+                      <div class='divTable'>
+                        <div class='divTableBody'>
+                          <div class='divTableRow'>
+                            <div class='divTableCell'>
+                              <label>
+                                <input type='radio' name='rs_termination' value='count' />
+                                #{$.fn.recurring_select.texts['after']}
+                                <input type='text' data-wrapper-class='ui-recurring-select' id='rs_occurrence_count' class='rs_count' value='10' size='2' />
+                                #{$.fn.recurring_select.texts['occurrences']}
+                              </label>
+                            </div>
+                          </div>
+                          <div class='divTableRow'>
+                            <div class='divTableCell'>
+                              <label>
+                                <input type='radio' name='rs_termination' value='until'/>
+                                #{$.fn.recurring_select.texts['on']} 
+                              </label>
+                              <input type='text' data-wrapper-class='Zui-recurring-select' class='Adate_time_picker' id='rs_until_date' />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>              
             </div>
             <p class='rs_summary'>
               <span></span>
